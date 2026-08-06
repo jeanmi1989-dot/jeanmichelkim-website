@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Site officiel — pianiste classique.">
+<link rel="stylesheet" href="css/style.css">
+<title>…</title>
+</head>
+<body data-page="home" data-title-key="nav.home">
+
+  <div id="site-header"></div>
+
+  <section class="hero">
+    <div class="hero-media">
+      <!-- 静止画に戻しました。動画版は images/hero.mp4 に保存済みです -->
+      <img src="images/hero.jpg" alt=""
+        onerror="this.parentElement.classList.add('img-missing'); this.remove();">
+      <!--
+      <video autoplay muted loop playsinline poster="images/hero.jpg">
+        <source src="images/hero.mp4" type="video/mp4">
+      </video>
+      -->
+    </div>
+    <div class="hero-credit">&copy; Jean-Baptiste Millot</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow eyebrow" data-i18n="pages.home.heroEyebrow"></div>
+      <h1 class="hero-title" data-i18n="site.name"></h1>
+      <div class="hero-subtitle" data-i18n="pages.home.heroSubtitle"></div>
+      <div class="hero-actions">
+        <a class="btn btn-invert" href="schedule.html" data-i18n="pages.home.heroCta"></a>
+        <a class="btn btn-invert" href="biography.html" data-i18n="nav.biography"></a>
+      </div>
+    </div>
+    <div class="scroll-cue">Scroll</div>
+  </section>
+
+  <section>
+    <div class="container two-col">
+      <div class="frame-photo reveal">
+        <!-- 写真: images/portrait-home.jpg を差し替えてください（縦長 4:5 推奨） -->
+        <img src="images/portrait-home.jpg" alt=""
+          onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'img-missing',style:'aspect-ratio:4/5',innerText:'Photo'}))">
+        <span class="photo-credit">&copy; Jean-Baptiste Millot</span>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow" data-i18n="pages.home.introTitle"></div>
+        <h2 class="section-title" data-i18n="site.name"></h2>
+        <div class="divider"></div>
+        <div id="home-intro-text"></div>
+        <a class="btn" href="biography.html" data-i18n="common.moreInfo" style="margin-top:1rem;"></a>
+
+        <div class="announce">
+          <div class="eyebrow" data-i18n="pages.home.announceEyebrow"></div>
+          <p class="announce-title" data-i18n="pages.home.announceTitle" data-i18n-html></p>
+          <p class="announce-text" data-i18n="pages.home.announceText" data-i18n-html></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" data-i18n="pages.home.upcomingTitle"></div>
+          <h2 class="section-title" data-i18n="pages.home.upcomingTitle"></h2>
+        </div>
+        <a class="btn" href="schedule.html" data-i18n="common.viewAll"></a>
+      </div>
+      <div id="home-upcoming" class="upcoming-list reveal"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="eyebrow" data-i18n="pages.home.pressTitle"></div>
+      <h2 class="section-title" data-i18n="pages.home.pressTitle"></h2>
+      <div class="divider"></div>
+      <div id="home-press" class="press-quote reveal" style="border:none; padding-top:0;"></div>
+      <a class="btn btn-gold" href="press.html" data-i18n="common.viewAll" style="margin-top:1rem;"></a>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="container">
+      <div class="eyebrow" data-i18n="pages.home.discoTitle"></div>
+      <h2 class="section-title" data-i18n="pages.home.discoTitle"></h2>
+      <div class="divider"></div>
+      <div id="home-disco" class="two-col reveal"></div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data/content.js"></script>
+  <script src="js/data/schedule.js"></script>
+  <script src="js/data/press.js"></script>
+  <script src="js/data/discography.js"></script>
+  <script src="js/data/gallery.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

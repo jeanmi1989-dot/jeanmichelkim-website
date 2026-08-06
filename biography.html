@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+<title>…</title>
+</head>
+<body data-page="biography" data-title-key="nav.biography">
+
+  <div id="site-header"></div>
+
+  <header class="page-header">
+    <div class="container">
+      <div class="eyebrow" data-i18n="pages.biography.eyebrow"></div>
+      <h1 class="section-title" data-i18n="pages.biography.title"></h1>
+    </div>
+  </header>
+
+  <section>
+    <div class="container two-col">
+      <div class="frame-photo reveal">
+        <!-- 写真: images/portrait-bio.jpg を差し替えてください（縦長 4:5 推奨） -->
+        <img src="images/portrait-bio.jpg" alt=""
+          onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'img-missing',style:'aspect-ratio:4/5',innerText:'Photo'}))">
+        <span class="photo-credit">&copy; Jean-Baptiste Millot</span>
+      </div>
+      <div class="reveal" id="bio-text"></div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data/content.js"></script>
+  <script src="js/data/schedule.js"></script>
+  <script src="js/data/press.js"></script>
+  <script src="js/data/discography.js"></script>
+  <script src="js/data/gallery.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+<title>…</title>
+</head>
+<body data-page="contact" data-title-key="nav.contact">
+
+  <div id="site-header"></div>
+
+  <header class="page-header">
+    <div class="container">
+      <div class="eyebrow" data-i18n="pages.contact.eyebrow"></div>
+      <h1 class="section-title" data-i18n="pages.contact.title"></h1>
+    </div>
+  </header>
+
+  <section>
+    <div class="container contact-grid">
+      <div class="reveal">
+        <p class="section-intro" data-i18n="pages.contact.formIntro" style="margin-bottom:2rem;"></p>
+
+        <!--
+          この <form> は Netlify でホストすると自動的に送信フォームとして機能します
+          （data-netlify="true" のおかげで、サーバー側の設定は不要です）。
+          Netlify 以外にホストする場合は、送信時に自動でメールソフトが開く
+          fallback（下部のJS）が使われます。
+        -->
+        <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact">
+          <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+          <div class="field">
+            <label data-i18n="common.nameLabel"></label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="field">
+            <label data-i18n="common.emailLabel"></label>
+            <input type="email" name="email" required>
+          </div>
+          <div class="field">
+            <label data-i18n="common.subjectLabel"></label>
+            <input type="text" name="subject">
+          </div>
+          <div class="field">
+            <label data-i18n="common.messageLabel"></label>
+            <textarea name="message" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-gold" data-i18n="common.sendMessage"></button>
+          <p id="contact-thanks" style="display:none; margin-top:1rem; color:var(--color-gold);" data-i18n="pages.contact.sentThanks"></p>
+        </form>
+      </div>
+
+      <div class="reveal">
+        <dl class="contact-info" id="contact-info"></dl>
+        <div class="social-row" id="contact-social"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data/content.js"></script>
+  <script src="js/data/schedule.js"></script>
+  <script src="js/data/press.js"></script>
+  <script src="js/data/discography.js"></script>
+  <script src="js/data/gallery.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("contact-form");
+      const thanks = document.getElementById("contact-thanks");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(data).toString()
+        }).then(() => {
+          thanks.style.display = "block";
+          form.reset();
+        }).catch(() => {
+          // Netlify以外でホストしている場合のフォールバック：メールソフトを開く
+          const c = CONTENT.contactDetails;
+          const subject = encodeURIComponent(data.get("subject") || "Site — Contact");
+          const body = encodeURIComponent(
+            `${data.get("name")} <${data.get("email")}>\n\n${data.get("message")}`
+          );
+          window.location.href = `mailto:${c.email}?subject=${subject}&body=${body}`;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
