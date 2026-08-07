@@ -52,16 +52,23 @@ HTML/CSS/JSのファイルをそのまま編集して、そのままアップロ
 
 ## 4. 公開する（デプロイ）
 
-一番簡単なのは **Netlify** です（無料枠あり、独自ドメインも設定可）。
+このサイトは **GitHub Pages** で公開されています（GitHubリポジトリに
+push すると、1分ほどで自動的に本番サイトへ反映されます）。
 
-1. https://app.netlify.com/drop を開く
-2. `pianist-website` フォルダ全体をブラウザにドラッグ＆ドロップ
-3. 数秒でURLが発行されます
-4. お問い合わせフォーム（`contact.html`）はNetlifyでホストすると
-   追加設定なしでメール受信が使えます（Netlify Forms）
+- リポジトリ: https://github.com/jeanmi1989-dot/jeanmichelkim-website
+- 公開URL: https://jeanmichelkim.com
 
-GitHub Pages / Vercel / さくらのレンタルサーバーなど、静的ファイルを置ける
-どのホスティングでも同様に動作します（フォルダごとアップロードするだけ）。
+通常は、Claudeに「〇〇を直して」と依頼すれば、編集からpushまで
+すべて代行します。手動で更新する場合は、変更後に以下を実行してください。
+
+```
+git add -A
+git commit -m "変更内容のメモ"
+git push
+```
+
+お問い合わせフォームは **Formspree**（https://formspree.io）を利用しています。
+届いたメッセージは登録したGmail宛に届きます。
 
 ## 5. サイト構成
 
