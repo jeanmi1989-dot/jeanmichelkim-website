@@ -193,14 +193,10 @@ function renderBiography(lang) {
 }
 
 /* ---------- CONTACT PAGE ---------- */
+/* メールアドレスはコード上に一切残さない方針のため、
+   コンタクト先はフォーム（Formspree）とSNSのみを表示する */
 function renderContactInfo(lang) {
-  const el = document.getElementById("contact-info");
-  if (!el) return;
   const c = CONTENT.contactDetails;
-  el.innerHTML = `
-    <dt data-i18n="common.emailLabel"></dt>
-    <dd><a href="mailto:${c.email}">${c.email}</a></dd>
-  `;
   const social = document.getElementById("contact-social");
   if (social) {
     /* instagram / facebook 等は、contactDetails に無ければ自動的に非表示になる */

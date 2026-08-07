@@ -4,3 +4,6 @@ images/_originals/
 # OS/エディタが作る不要ファイル
 .DS_Store
 Thumbs.db
+
+# Local Netlify folder
+.netlify

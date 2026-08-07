@@ -23,14 +23,13 @@
         <p class="section-intro" data-i18n="pages.contact.formIntro" style="margin-bottom:2rem;"></p>
 
         <!--
-          この <form> は Netlify でホストすると自動的に送信フォームとして機能します
-          （data-netlify="true" のおかげで、サーバー側の設定は不要です）。
-          Netlify 以外にホストする場合は、送信時に自動でメールソフトが開く
-          fallback（下部のJS）が使われます。
+          このフォームは Formspree（https://formspree.io）にPOSTされます。
+          サイトのコード上にメールアドレスは一切含まれません。
+          別のFormspreeフォームに差し替えたい場合は、action属性の
+          URLを新しいFormエンドポイントに置き換えてください。
         -->
-        <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="contact">
-          <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <form id="contact-form" name="contact" method="POST" action="https://formspree.io/f/xjybkapd">
+          <p style="display:none;"><label>Don't fill this out: <input name="_gotcha"></label></p>
 
           <div class="field">
             <label data-i18n="common.nameLabel"></label>
@@ -50,11 +49,11 @@
           </div>
           <button type="submit" class="btn btn-gold" data-i18n="common.sendMessage"></button>
           <p id="contact-thanks" style="display:none; margin-top:1rem; color:var(--color-gold);" data-i18n="pages.contact.sentThanks"></p>
+          <p id="contact-error" style="display:none; margin-top:1rem; color:var(--color-ink-soft);" data-i18n="pages.contact.sendError"></p>
         </form>
       </div>
 
       <div class="reveal">
-        <dl class="contact-info" id="contact-info"></dl>
         <div class="social-row" id="contact-social"></div>
       </div>
     </div>
@@ -75,24 +74,24 @@
     document.addEventListener("DOMContentLoaded", () => {
       const form = document.getElementById("contact-form");
       const thanks = document.getElementById("contact-thanks");
+      const errorMsg = document.getElementById("contact-error");
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const data = new FormData(form);
-        fetch("/", {
+        fetch(form.action, {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams(data).toString()
-        }).then(() => {
-          thanks.style.display = "block";
-          form.reset();
+          body: data,
+          headers: { "Accept": "application/json" }
+        }).then((response) => {
+          if (response.ok) {
+            thanks.style.display = "block";
+            if (errorMsg) errorMsg.style.display = "none";
+            form.reset();
+          } else {
+            if (errorMsg) errorMsg.style.display = "block";
+          }
         }).catch(() => {
-          // Netlify以外でホストしている場合のフォールバック：メールソフトを開く
-          const c = CONTENT.contactDetails;
-          const subject = encodeURIComponent(data.get("subject") || "Site — Contact");
-          const body = encodeURIComponent(
-            `${data.get("name")} <${data.get("email")}>\n\n${data.get("message")}`
-          );
-          window.location.href = `mailto:${c.email}?subject=${subject}&body=${body}`;
+          if (errorMsg) errorMsg.style.display = "block";
         });
       });
     });

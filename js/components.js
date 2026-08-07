@@ -81,7 +81,7 @@ function renderFooter() {
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer.contactTitle"></h4>
-        <a href="mailto:${c.email}">${c.email}</a>
+        <a href="contact.html" data-i18n="nav.contact"></a>
         ${socialLinks}
       </div>
     </div>

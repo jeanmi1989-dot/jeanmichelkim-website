@@ -53,8 +53,9 @@ const CONTENT = {
         gallery: { eyebrow: "Images", title: "Galerie" },
         contact: {
           eyebrow: "Écrire", title: "Contact",
-          formIntro: "Pour toute demande de concert, interview ou information, merci d'utiliser le formulaire ci-dessous ou d'écrire directement.",
-          sentThanks: "Merci, votre message a bien été envoyé."
+          formIntro: "Pour toute demande de concert, interview ou information, merci d'utiliser le formulaire ci-dessous.",
+          sentThanks: "Merci, votre message a bien été envoyé.",
+          sendError: "Une erreur s'est produite. Merci de réessayer, ou de nous contacter via YouTube."
         }
       }
     },
@@ -102,8 +103,9 @@ const CONTENT = {
         gallery: { eyebrow: "写真", title: "ギャラリー" },
         contact: {
           eyebrow: "お問い合わせ", title: "コンタクト",
-          formIntro: "コンサートのご依頼、取材、その他のお問い合わせは以下のフォーム、または直接メールにてご連絡ください。",
-          sentThanks: "メッセージを送信しました。ありがとうございます。"
+          formIntro: "コンサートのご依頼、取材、その他のお問い合わせは以下のフォームよりご連絡ください。",
+          sentThanks: "メッセージを送信しました。ありがとうございます。",
+          sendError: "送信中にエラーが発生しました。お手数ですが再度お試しいただくか、YouTubeよりご連絡ください。"
         }
       }
     },
@@ -151,8 +153,9 @@ const CONTENT = {
         gallery: { eyebrow: "Images", title: "Gallery" },
         contact: {
           eyebrow: "Get in touch", title: "Contact",
-          formIntro: "For booking requests, interviews, or any other inquiry, please use the form below or write directly.",
-          sentThanks: "Thank you, your message has been sent."
+          formIntro: "For booking requests, interviews, or any other inquiry, please use the form below.",
+          sentThanks: "Thank you, your message has been sent.",
+          sendError: "Something went wrong. Please try again, or reach out via YouTube."
         }
       }
     }
@@ -205,13 +208,11 @@ const CONTENT = {
   },
 
   /* ---------- 連絡先・SNS（footer / contactページ共通） ---------- */
-  /* ★ instagram / facebook は今は非掲載。載せたくなったら
-     youtube と同じ形 { label: "...", url: "..." } を追加するだけで
-     footerとcontactページ両方に自動的に表示されます。 */
+  /* ★ メールアドレスはコード上に一切書かない方針（お問い合わせは
+     Formspree経由のフォームのみ）。instagram / facebook を載せたく
+     なったら、youtube と同じ形 { label: "...", url: "..." } を
+     追加するだけで footerとcontactページ両方に自動的に表示されます。 */
   contactDetails: {
-    email: "jeanmi1989@gmail.com",
-    // 【要編集】ドメイン取得後、contact@あなたのドメイン.com からの
-    // 転送設定が済んだら、上の値をそちらに差し替えてください。
     youtube: { label: "YouTube", url: "https://www.youtube.com/@jeanmi1989" }
   }
 };
