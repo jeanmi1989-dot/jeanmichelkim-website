@@ -251,6 +251,11 @@ body:not([data-page="home"]) .nav-inner {
 .hero-media img, .hero-media video {
   width: 100%; height: 100%; object-fit: cover; object-position: center 28%;
 }
+/* 縦長のスマホ画面では、横長の写真を中央基準で切り抜くと顔が見切れるため、
+   被写体（顔）がある左寄りを基準に切り抜く */
+@media (max-width: 640px) {
+  .hero-media img, .hero-media video { object-position: 32% 24%; }
+}
 .hero-media::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(10,9,7,0.15) 0%, rgba(10,9,7,0.15) 40%, rgba(8,7,6,0.85) 100%);
@@ -317,6 +322,20 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
   padding: 1.5rem 0; border-top: 1px solid var(--color-line);
 }
 .upcoming-item:last-child { border-bottom: 1px solid var(--color-line); }
+/* スマホ幅では「日付・会場・チケット」を横一列に収めると曲目が
+   極端に狭くなり読みにくくなるため、日付＋本文の2列にし、
+   チケットボタンは下の行に回す */
+@media (max-width: 640px) {
+  .upcoming-item {
+    grid-template-columns: 3.2rem 1fr;
+    row-gap: 0.5rem;
+    padding: 1.3rem 0;
+  }
+  .upcoming-item .btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
 .date-block { font-family: var(--font-ui); }
 .date-block .day { font-family: var(--font-display); font-size: 2rem; line-height: 1; color: var(--color-gold); }
 .date-block .month { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-faint); }
