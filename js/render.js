@@ -38,8 +38,37 @@ function upcomingItemHtml(item, lang) {
     </div>`;
 }
 
+/* ---------- HOME: featured concert banner ----------
+   schedule.js の該当公演に highlight: true を付けると、
+   トップページのヒーロー直下に大きな専用バナーとして表示されます。
+   複数ある場合は日付が一番近いものを表示します。 */
+function renderFeaturedConcert(lang) {
+  const section = document.getElementById("featured-concert");
+  if (!section) return;
+  const item = sortedSchedule().find((s) => s.highlight && isFuture(s.date));
+  if (!item) {
+    section.style.display = "none";
+    return;
+  }
+  section.style.display = "";
+  document.getElementById("featured-concert-venue").textContent = item.venue[lang];
+  document.getElementById("featured-concert-date").textContent =
+    `${item.city[lang]} — ${I18N.formatDate(item.date)}${item.time ? " · " + item.time : ""}`;
+  document.getElementById("featured-concert-program").textContent = item.program[lang];
+  const cta = document.getElementById("featured-concert-cta");
+  if (item.ticketUrl) {
+    cta.href = item.ticketUrl;
+    cta.style.display = "";
+    cta.textContent = I18N.get("common.buyTickets", lang);
+  } else {
+    cta.style.display = "none";
+  }
+}
+
 /* ---------- HOME ---------- */
 function renderHome(lang) {
+  renderFeaturedConcert(lang);
+
   const introEl = document.getElementById("home-intro-text");
   if (introEl) {
     introEl.innerHTML = CONTENT.ui[lang].pages.home.introText.map((p) => `<p>${p}</p>`).join("");

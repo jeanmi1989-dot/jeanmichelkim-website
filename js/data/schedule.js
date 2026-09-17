@@ -14,6 +14,8 @@
      program    : 演奏プログラム（3言語）
      ticketUrl  : チケット購入ページのURL（無ければ "" のまま）
      featured   : 現在は表示ロジックには未使用（将来の拡張用）
+     highlight  : true にすると、トップページの一番目立つ場所に
+                  大きく専用バナーとして表示されます（1件だけを想定）。
    ============================================================ */
 
 const SCHEDULE = [
@@ -86,8 +88,9 @@ const SCHEDULE = [
       ja: "J.S.バッハ：幻想曲 ハ短調 BWV 906／ベートーヴェン：ピアノ・ソナタ第17番 ニ短調 Op.31-2《テンペスト》／ショパン《幻想ポロネーズ》Op.61／ラヴェル《夜のガスパール》／ラフマニノフ《コレルリの主題による変奏曲》Op.42",
       en: "J. S. Bach: Fantasia in C minor, BWV 906 · Beethoven: Piano Sonata No. 17 “The Tempest,” Op. 31 No. 2 · Chopin: Polonaise-Fantaisie, Op. 61 · Ravel: Gaspard de la nuit · Rachmaninoff: Variations on a Theme of Corelli, Op. 42"
     },
-    ticketUrl: "",
-    featured: true
+    ticketUrl: "https://www.helloasso.com/associations/kyomei/evenements/recital-de-piano-jean-michel-kim-1",
+    featured: true,
+    highlight: true
   },
   {
     date: "2027-01-01",

@@ -292,6 +292,35 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
   content: ""; position: absolute; inset: 18px; border: 1px solid var(--color-gold); z-index: -1;
 }
 
+/* Home: featured concert banner (schedule.js item with highlight: true) */
+.featured-concert {
+  padding: clamp(3rem, 7vw, 4.5rem) 0;
+  background: var(--color-ink);
+  color: var(--color-white);
+  text-align: center;
+}
+.featured-concert-inner { display: flex; flex-direction: column; align-items: center; }
+.featured-concert-eyebrow { color: var(--color-gold-soft); }
+.featured-concert-venue {
+  font-style: italic;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  margin: 0.3em 0 0.15em;
+}
+.featured-concert-date {
+  font-family: var(--font-ui);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: rgba(255, 253, 250, 0.85);
+}
+.featured-concert-program {
+  max-width: 62ch;
+  margin: 1em 0 1.6em;
+  color: rgba(255, 253, 250, 0.7);
+  font-size: 0.95rem;
+}
+.featured-concert-cta.btn-gold { border-color: var(--color-gold-soft); color: var(--color-gold-soft); }
+.featured-concert-cta.btn-gold:hover { background: var(--color-gold-soft); color: var(--color-ink); }
+
 /* Home: announcement callout (special project highlight) */
 .announce {
   margin-top: 2.2rem;

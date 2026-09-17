@@ -42,6 +42,7 @@ const CONTENT = {
           announceEyebrow: "Nouveau projet",
           announceTitle: "À partir de janvier 2027 — l'intégrale des 32 sonates pour piano de Beethoven",
           announceText: "Un cycle de trois ans, à raison de deux à trois récitals par an, à l'Auditorium Régis Pasquier / Cordacor (Loches).",
+          featuredEyebrow: "À ne pas manquer",
           upcomingTitle: "Prochains concerts",
           pressTitle: "La presse en parle",
           discoTitle: "Discographie"
@@ -92,6 +93,7 @@ const CONTENT = {
           announceEyebrow: "新プロジェクト",
           announceTitle: "<span class=\"num\">2027</span>年<span class=\"num\">1</span>月より　ベートーヴェン ピアノ・ソナタ全<span class=\"num\">32</span>曲演奏会 開催決定",
           announceText: "Auditorium Régis Pasquier / Cordacor（ロシュ）にて、年<span class=\"num\">2〜3</span>公演、<span class=\"num\">3</span>年間にわたるシリーズ。",
+          featuredEyebrow: "見逃せない公演",
           upcomingTitle: "今後の公演",
           pressTitle: "批評家の声",
           discoTitle: "ディスコグラフィー"
@@ -142,6 +144,7 @@ const CONTENT = {
           announceEyebrow: "New project",
           announceTitle: "From January 2027 — the complete 32 Beethoven piano sonatas",
           announceText: "A three-year cycle, with two to three recitals each year, at the Auditorium Régis Pasquier / Cordacor (Loches).",
+          featuredEyebrow: "Don't miss",
           upcomingTitle: "Upcoming concerts",
           pressTitle: "What the press says",
           discoTitle: "Discography"
