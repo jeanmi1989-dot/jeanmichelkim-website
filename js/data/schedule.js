@@ -79,7 +79,7 @@ const SCHEDULE = [
     featured: true
   },
   {
-    date: "2026-12-07",
+    date: "2026-12-09",
     time: "",
     city: { fr: "Paris", ja: "パリ", en: "Paris" },
     venue: { fr: "Salle Cortot", ja: "サル・コルトー", en: "Salle Cortot" },
