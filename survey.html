@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/style.css">
+<title>アンケート — Jean-Michel Kim</title>
+<!--
+  survey.html — 終演後アンケート（QRコードからアクセスする専用ページ）
+  ------------------------------------------------------------
+  ・どの公演のアンケートかは URL の ?d=YYYY-MM-DD で指定します
+    （例 survey.html?d=2026-10-25）。js/data/schedule.js の公演情報と
+    曲目が自動で表示されます。?d が無い場合は、今日以前で一番新しい公演。
+  ・回答は Googleフォームに送信され、Googleスプレッドシートに集まります。
+    送信先は下の GOOGLE_FORM で設定します（Googleフォーム側の質問は
+    すべて「記述式」または「段落」、必須なしにしておくこと）。
+  ・ナビゲーションには載せていません（QRコードからのみアクセス）。
+-->
+<style>
+  body[data-page="survey"] { --color-gold: #8c6a4a; --color-gold-soft: #b89877; }
+  .survey-wrap { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+  .survey-top { padding: 2.2rem 0 2rem; border-bottom: 1px solid var(--color-line); }
+  .survey-top .nav-logo { font-family: var(--font-display); font-style: italic; font-size: 1.3rem; }
+  .survey-top h1 { font-family: var(--font-display); font-size: clamp(1.6rem, 6vw, 2.3rem); margin-top: 0.8em; line-height: 1.35; }
+  .concert-meta { margin-top: 1.2rem; color: var(--color-ink-soft); font-size: 0.95rem; line-height: 1.7; }
+  .concert-meta strong { color: var(--color-ink); font-weight: 500; }
+  .survey-lead { margin: 1.8rem 0 0.4rem; color: var(--color-ink-soft); }
+  .q { padding: 1.6rem 0; border-bottom: 1px solid var(--color-line); }
+  .q-title { font-family: var(--font-ui); font-weight: 500; font-size: 0.98rem; margin-bottom: 0.9rem; }
+  .q-title .num { color: var(--color-gold); margin-right: 0.5em; }
+  .q-title .opt { color: var(--color-ink-faint); font-size: 0.8rem; margin-left: 0.4em; }
+  .q-note { font-size: 0.85rem; color: var(--color-ink-faint); margin: -0.4rem 0 0.9rem; }
+  .choices { display: flex; flex-direction: column; gap: 0.55rem; }
+  .choices.row { flex-direction: row; flex-wrap: wrap; }
+  .choice { position: relative; }
+  .choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .choice span {
+    display: block; padding: 0.75em 1em; border: 1px solid var(--color-line);
+    background: var(--color-white); font-family: var(--font-ui); font-size: 0.92rem;
+    line-height: 1.5; cursor: pointer; transition: border-color .2s, background .2s;
+  }
+  .choice input:checked + span { border-color: var(--color-gold); background: #f3ebe0; box-shadow: inset 3px 0 0 var(--color-gold); }
+  .choice input:focus-visible + span { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+  .rating .choice { flex: 1 1 0; min-width: 52px; }
+  .rating .choice span { text-align: center; padding: 0.8em 0; font-size: 1.05rem; }
+  .rating-legend { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--color-ink-faint); margin-top: 0.4rem; font-family: var(--font-ui); }
+  .q textarea, .q input[type="text"], .q input[type="email"] {
+    width: 100%; background: var(--color-white); border: 1px solid var(--color-line);
+    padding: 0.75em 0.9em; font-size: 1rem; color: var(--color-ink); font-family: var(--font-ui);
+  }
+  .q textarea:focus, .q input:focus { outline: none; border-color: var(--color-gold); }
+  .q label.sub { display: block; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-ink-faint); margin: 1rem 0 0.4rem; }
+  .other-input { margin-top: 0.5rem; display: none; }
+  .contact-fields { display: none; margin-top: 0.4rem; }
+  .privacy { font-size: 0.82rem; color: var(--color-ink-faint); line-height: 1.7; margin-top: 1rem; background: rgba(255,253,250,0.6); padding: 0.9em 1em; border-left: 2px solid var(--color-gold-soft); }
+  .submit-row { padding: 2rem 0 1rem; text-align: center; }
+  .submit-row .btn { width: 100%; justify-content: center; font-size: 1rem; padding: 1.1em; background: var(--color-gold); color: var(--color-white); border-color: var(--color-gold); }
+  .submit-row .btn[disabled] { opacity: 0.6; cursor: wait; }
+  .form-error { color: #7a3030; font-size: 0.9rem; margin-top: 0.9rem; display: none; }
+  .thanks { display: none; padding: 3rem 0; text-align: center; }
+  .thanks h2 { font-size: 2rem; font-style: italic; }
+  .thanks p { color: var(--color-ink-soft); margin-top: 1.2rem; }
+  .thanks .links { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
+  .survey-foot { padding: 2.5rem 0 3rem; text-align: center; font-size: 0.8rem; color: var(--color-ink-faint); font-family: var(--font-ui); }
+</style>
+</head>
+<body data-page="survey">
+
+<div class="survey-wrap">
+
+  <header class="survey-top">
+    <a href="index.html" class="nav-logo">Jean-Michel Kim</a>
+    <h1>本日はご来場いただき、<br>誠にありがとうございました。</h1>
+    <div class="concert-meta" id="concert-meta"></div>
+  </header>
+
+  <form id="survey-form" novalidate>
+    <p class="survey-lead">今後の演奏活動の参考にさせていただきたく、アンケートへのご協力をお願いいたします（所要時間 約2分）。</p>
+
+    <div class="q">
+      <div class="q-title"><span class="num">1</span>本日の演奏会はいかがでしたか？</div>
+      <div class="choices row rating">
+        <label class="choice"><input type="radio" name="rating" value="5"><span>5</span></label>
+        <label class="choice"><input type="radio" name="rating" value="4"><span>4</span></label>
+        <label class="choice"><input type="radio" name="rating" value="3"><span>3</span></label>
+        <label class="choice"><input type="radio" name="rating" value="2"><span>2</span></label>
+        <label class="choice"><input type="radio" name="rating" value="1"><span>1</span></label>
+      </div>
+      <div class="rating-legend"><span>とても良かった</span><span>良くなかった</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-title"><span class="num">2</span>特に印象に残った曲は？<span class="opt">（複数選択可）</span></div>
+      <div class="choices" id="pieces"></div>
+    </div>
+
+    <div class="q">
+      <div class="q-title"><span class="num">3</span>ご感想・メッセージをお聞かせください</div>
+      <textarea name="comment" rows="5" placeholder="ご自由にお書きください"></textarea>
+      <label class="choice" style="margin-top:0.7rem;"><input type="checkbox" name="quoteOk" value="可"><span>ご感想を、お名前を伏せてウェブサイト・SNS等でご紹介してもよい</span></label>
+    </div>
+
+    <div class="q">
+      <div class="q-title"><span class="num">4</span>本日の演奏会を何でお知りになりましたか？</div>
+      <div class="choices" id="source">
+        <label class="choice"><input type="checkbox" name="source" value="チラシ・ポスター"><span>チラシ・ポスター</span></label>
+        <label class="choice"><input type="checkbox" name="source" value="ホール・施設の案内"><span>ホール・施設の案内</span></label>
+        <label class="choice"><input type="checkbox" name="source" value="知人・家族の紹介"><span>知人・家族の紹介</span></label>
+        <label class="choice"><input type="checkbox" name="source" value="SNS"><span>SNS（YouTube・Instagram など）</span></label>
+        <label class="choice"><input type="checkbox" name="source" value="ウェブサイト"><span>ウェブサイト・チケットサイト</span></label>
+        <label class="choice"><input type="checkbox" name="source" value="新聞・雑誌"><span>新聞・雑誌・広報誌</span></label>
+        <label class="choice"><input type="checkbox" name="source" value="その他" data-other="source-other"><span>その他</span></label>
+      </div>
+      <input type="text" class="other-input" id="source-other" placeholder="その他（具体的に）">
+    </div>
+
+    <div class="q">
+      <div class="q-title"><span class="num">5</span>今後聴いてみたい曲・作曲家があれば教えてください<span class="opt">（任意）</span></div>
+      <input type="text" name="wish" placeholder="例：ドビュッシー、ショパンのバラード など">
+    </div>
+
+    <div class="q">
+      <div class="q-title"><span class="num">6</span>今後の演奏会のご案内をメールでお送りしてもよろしいですか？</div>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="optin" value="希望する"><span>はい、案内を希望します</span></label>
+        <label class="choice"><input type="radio" name="optin" value="希望しない"><span>いいえ、今回は結構です</span></label>
+      </div>
+      <div class="contact-fields" id="contact-fields">
+        <label class="sub" for="f-name">お名前</label>
+        <input type="text" id="f-name" name="name" autocomplete="name">
+        <label class="sub" for="f-email">メールアドレス</label>
+        <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" placeholder="example@mail.com">
+        <p class="privacy">ご記入いただいたお名前・メールアドレスは、Jean-Michel Kim の演奏会・CD等のご案内にのみ使用し、第三者に提供することはありません。配信はいつでも停止できます。</p>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" class="btn" id="submit-btn">送信する</button>
+      <p class="form-error" id="form-error"></p>
+    </div>
+  </form>
+
+  <section class="thanks" id="thanks">
+    <div class="eyebrow">Merci beaucoup</div>
+    <h2>ご回答ありがとうございました</h2>
+    <p>いただいたお声は、今後の演奏活動の励みにさせていただきます。<br>またお会いできますことを楽しみにしております。</p>
+    <div class="links">
+      <a class="btn btn-gold" href="schedule.html">今後の公演を見る</a>
+      <a class="btn" href="index.html">ウェブサイトへ</a>
+    </div>
+  </section>
+
+  <footer class="survey-foot">© Jean-Michel Kim</footer>
+</div>
+
+<script src="js/data/schedule.js"></script>
+<script>
+  /* ============================================================
+     送信先（Googleフォーム）の設定
+     formId : フォームのURL「https://docs.google.com/forms/d/e/【ここ】/viewform」
+     entries: 各質問の entry 番号（事前入力URLから取得）
+     ============================================================ */
+  const GOOGLE_FORM = {
+    formId: "1FAIpQLSdrTXbnyiGvpmQlnLDy39Uz9-2RCGFLoL2ocbWIObKIdkMaLA",
+    entries: {
+      rating: "2100467542",   // 満足度（均等目盛 1〜5）
+      pieces: "1086062480",   // 印象に残った曲
+      comment: "2059915964",  // ご感想
+      quoteOk: "2010934220",  // 感想の紹介可否
+      source: "472976172",    // 知ったきっかけ
+      wish: "976853788",      // 今後聴きたい曲
+      optin: "667360678",     // 案内の希望
+      name: "1654087886",     // お名前
+      email: "927007298"      // メールアドレス
+    }
+  };
+
+  /* ---------- 公演情報と曲目の表示 ---------- */
+  const params = new URLSearchParams(location.search);
+  const todayStr = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
+  const concert = SCHEDULE.find((c) => c.date === params.get("d"))
+    || SCHEDULE.filter((c) => c.date <= todayStr).sort((a, b) => b.date.localeCompare(a.date))[0];
+
+  if (concert) {
+    const [y, m, d] = concert.date.split("-").map(Number);
+    document.getElementById("concert-meta").innerHTML =
+      `<strong>ジャン＝ミシェル・キム ピアノ・リサイタル</strong><br>` +
+      `${y}年${m}月${d}日 ${concert.city.ja}<br>${concert.venue.ja}`;
+
+    const piecesEl = document.getElementById("pieces");
+    const pieces = concert.program.ja.split("／").map((s) => s.trim()).filter(Boolean);
+    pieces.forEach((p) => {
+      const label = document.createElement("label");
+      label.className = "choice";
+      label.innerHTML = `<input type="checkbox" name="pieces"><span></span>`;
+      label.querySelector("input").value = p;
+      label.querySelector("span").textContent = p;
+      piecesEl.appendChild(label);
+    });
+    const encore = document.createElement("label");
+    encore.className = "choice";
+    encore.innerHTML = `<input type="checkbox" name="pieces" value="アンコール"><span>アンコール</span>`;
+    piecesEl.appendChild(encore);
+  }
+
+  /* ---------- 「その他」・案内希望の表示切り替え ---------- */
+  document.querySelectorAll("input[data-other]").forEach((cb) => {
+    const other = document.getElementById(cb.dataset.other);
+    cb.addEventListener("change", () => { other.style.display = cb.checked ? "block" : "none"; });
+  });
+  document.querySelectorAll('input[name="optin"]').forEach((r) => {
+    r.addEventListener("change", () => {
+      document.getElementById("contact-fields").style.display = r.value === "希望する" && r.checked ? "block" : "none";
+    });
+  });
+
+  /* ---------- 送信 ---------- */
+  const form = document.getElementById("survey-form");
+  const errorEl = document.getElementById("form-error");
+  const btn = document.getElementById("submit-btn");
+
+  function showError(msg) { errorEl.textContent = msg; errorEl.style.display = "block"; }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    errorEl.style.display = "none";
+
+    const fd = new FormData(form);
+    const checked = (name) => fd.getAll(name).join("、");
+    let source = fd.getAll("source");
+    const otherText = document.getElementById("source-other").value.trim();
+    if (otherText) source = source.map((s) => (s === "その他" ? `その他（${otherText}）` : s));
+
+    const values = {
+      rating: fd.get("rating") || "",
+      pieces: checked("pieces"),
+      comment: (fd.get("comment") || "").trim(),
+      quoteOk: fd.get("quoteOk") ? "可" : "",
+      source: source.join("、"),
+      wish: (fd.get("wish") || "").trim(),
+      optin: fd.get("optin") || "",
+      name: (fd.get("name") || "").trim(),
+      email: (fd.get("email") || "").trim()
+    };
+    if (values.optin !== "希望する") { values.name = ""; values.email = ""; }
+
+    if (!values.rating && !values.pieces && !values.comment && !values.source && !values.wish && !values.optin) {
+      return showError("いずれかの項目にご回答のうえ、送信してください。");
+    }
+    if (values.optin === "希望する" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+      return showError("ご案内をご希望の場合は、メールアドレスを正しくご入力ください。");
+    }
+    if (!GOOGLE_FORM.formId) {
+      return showError("ただいま送信の準備中です。恐れ入りますが、しばらくしてから再度お試しください。");
+    }
+
+    const body = new URLSearchParams();
+    Object.entries(values).forEach(([key, val]) => {
+      const entry = GOOGLE_FORM.entries[key];
+      if (entry && val) body.append(`entry.${entry}`, val);
+    });
+
+    btn.disabled = true;
+    btn.textContent = "送信中…";
+    // Googleフォームはクロスオリジンの応答を返さないため no-cors で送信（応答内容は読めない）
+    fetch(`https://docs.google.com/forms/d/e/${GOOGLE_FORM.formId}/formResponse`, {
+      method: "POST", mode: "no-cors", body
+    }).then(() => {
+      form.style.display = "none";
+      document.getElementById("thanks").style.display = "block";
+      window.scrollTo(0, 0);
+    }).catch(() => {
+      btn.disabled = false;
+      btn.textContent = "送信する";
+      showError("送信できませんでした。電波の良い場所で、もう一度お試しください。");
+    });
+  });
+</script>
+</body>
+</html>
